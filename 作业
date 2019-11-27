@@ -1,1 +1,22 @@
 
+data <- read.table('C:/Users/kevin/Desktop/data.txt')
+x1 <- data$x1
+x2 <- data$x2
+y <- data$y
+n <- length(y)
+p <- 2
+data1 <- lm(y~x1+x2)
+regress.x <- coef(data1)  #ȡ???ع?ģ????x1??x2??ϵ???Լ?????
+yhat <- regress.x[2]*x1+regress.x[3]*x2+regress.x[1] #?ع?y
+e1 <- y-yhat        #??ͨ?в?
+sigmahat <- ((sum(e1^2))/(n-3))^0.5 #?ع???׼????
+h <- hatvalues(data1) #?ܸ?ֵ
+SRE1 <- e1/(sigmahat*sqrt(1-h)) #ѧ?????в?
+e2 <- e1/(1-h)     #ɾ???в?
+SRE2 <-SRE1*sqrt((n-p-2)/(n-p-1-SRE1^2))  #ɾ??ѧ?????в?
+meanh <- sum(h)/n
+ch <- h-1/n
+D <- (e^2/((p+1)*sigmahat^2))*(h/(1-h)^2) #???˾???
+list_data <- list(x1,x2,y,e1,SRE1,e2,SRE2,ch,D)
+names(list_data) <- c("x1","x2","y","ei","SREi","e(i)","SRE(i)","chii","Di")
+print(list_data)
